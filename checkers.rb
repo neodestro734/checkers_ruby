@@ -24,13 +24,11 @@ class Checkers
 				next
 			end
 
-			# user_input = player.get_user_input
-			# parsed_input = parse_input(user_input)
-			user_move_seq = [player.get_move_sequence]
+			user_move_seq = player.get_move_sequence
+
 			next unless piece_to_move.valid_move_seq?(user_move_seq)
 			piece_to_move.perform_moves(user_move_seq)
-			# p piece_to_move.pos unless piece_to_move.nil?
-			# p player.color
+
 			player = (player.color == :red ? @player2 : @player1)
 		end
 
@@ -59,10 +57,6 @@ class HumanPlayer
 			puts '(0,0) is in the upper left hand corner:'
 			piece_arr = gets.chomp.split(',')
 			piece_spot = piece_arr.map(&:to_i)
-			# debugger
-			# p piece_spot
-			# # p board[piece_spot]
-			# p board[piece_spot].color
 		rescue => e
 			puts e
 			retry
@@ -73,11 +67,14 @@ class HumanPlayer
 	def get_move_sequence
 		move_seq = []
 		begin
-			puts 'Please enter a move sequence in this format: 2,2,4,4'
-			move_seq_arr = gets.chomp.split(',')
+			puts 'Please enter a move sequence in this format: 2,2 4,4'
+			move_seq_arr = gets.chomp.split(' ')
 			p move_seq_arr
-			move_seq = move_seq_arr.map(&:to_i)
-			p move_seq
+
+			move_seq_arr.each do |string_pos|
+				els = string_pos.split(',')
+				move_seq << [els[0].to_i, els[1].to_i]
+			end
 		rescue => e
 			puts e
 			retry

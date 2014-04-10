@@ -13,14 +13,14 @@ class Checkers
 	end
 
 	def run
-		puts "\n\nWelcome to checkers!!\n"
+		puts "\n\nWelcome to checkers!!\n\n"
 		player = @player1 #red
 		loop do
 			@board.display
 
 			piece_to_move = player.get_piece_to_move(@board)
 			if piece_to_move.color != player.color
-				puts "You must move your own piece!".colorize(:red)
+				puts "\nYou must move your own piece!\n".colorize(:red)
 				next
 			end
 
@@ -53,8 +53,8 @@ class HumanPlayer
 
 	def get_piece_to_move(board)
 		begin
-			puts 'Please enter a piece to move by its board coordinates.'
-			puts '(0,0) is in the upper left hand corner:'
+			puts "\n\nPlease enter a piece to move by its board coordinates."
+			puts "(0,0) is in the upper left hand corner:\n\n"
 			piece_arr = gets.chomp.split(',')
 			piece_spot = piece_arr.map(&:to_i)
 		rescue => e

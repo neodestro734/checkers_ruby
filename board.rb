@@ -66,6 +66,7 @@ class Board
 
   def display
   	(0..7).each do |r|
+  		print ('  ' + (8 - r).to_s + ' ').colorize(:yellow)
   		(0..7).each do |c|
   			color = (r + c).even? ? :light_red : :light_black
   			if self[[r, c]].nil?
@@ -76,6 +77,7 @@ class Board
   		end
   		print "\n"
   	end
+  	print '    A B C D E F G H'.colorize(:yellow)
   end
 
   def dup

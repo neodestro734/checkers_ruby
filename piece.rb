@@ -42,6 +42,7 @@ class Piece
 		# remove opponent piece
 		@board.remove_piece(@board[jumped_pos], jumped_pos)
 		@board.move_piece(self, move_to)
+		maybe_promote
 
 
 		true	
@@ -58,9 +59,22 @@ class Piece
 
 		if slide_poses.include?(move_to)
 			@board.move_piece(self, move_to)
+			p @pos
+			maybe_promote
 			true
 		else
 			false
+		end
+	end
+
+	def maybe_promote
+		promote_square = (@color == :red ? 0 : 7)
+		p promote_square
+		p @pos
+		if @pos[0] == promote_square
+			puts "Piece promoted to King"
+			self.is_king = true
+			self.disp_char.upcase!
 		end
 	end
 
@@ -100,16 +114,20 @@ end
 b = Board.new()
 piece = Piece.new(:black, [1, 1], b)
 p2 = Piece.new(:red, [2, 2], b)
+p3 = Piece.new(:black, [1, 3], b)
 # p piece
 # p piece.move_diffs
 puts "\n\n"
 # p p2.perform_slide([3, 3])
+p p2.perform_jump([0, 4])
 b.display
+puts "is king? #{p2.is_king}"
+# p piece.is_king
 # p piece.perform_jump([3, 3])
 # p piece.perform_slide([2, 0])
 # p piece.perform_jump([0,3])
-puts "\n\n"
-b.display
+# puts "\n\n"
+# b.display
 # piece.perform_slide([10,10])
 # p piece.pos
 # p p2.pos

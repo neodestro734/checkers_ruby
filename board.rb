@@ -58,6 +58,7 @@ class Board
 
   	self[piece.pos] = nil
   	self[pos] = piece
+  	piece.pos = pos
   end
 end
 

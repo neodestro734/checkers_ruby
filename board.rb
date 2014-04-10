@@ -2,8 +2,12 @@ class Board
 
 	attr_accessor :rows
 
-	def initialize(filled = true)
+	def initialize(add_pieces = true)
 		@rows = Array.new(8) { Array.new(8, nil) }
+
+		# if add_pieces
+			
+		# end
 	end
 
 	def [](pos)

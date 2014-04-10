@@ -3,6 +3,9 @@ require 'debugger'
 
 # red stats at 7, black starts at 0
 
+class InvalidMoveError < ArgumentError
+end
+
 class Piece
 
 	attr_accessor :color, :is_king, :pos, :board, :disp_char
@@ -15,6 +18,18 @@ class Piece
 		@disp_char = color.to_s.chars.first
 
 		board.add_piece(self, pos)
+	end
+
+	def subtract_moves(pos1, pos2)
+		[pos1[0] - pos2[0], pos1[1] - pos2[1]]
+	end
+
+	def get_move_type(pos1, pos2)
+		if subtract_moves(pos1, pos2).all? { |dif| dif.abs == 1 }
+				:slide
+			else
+				:jump
+			end
 	end
 
 	def perform_jump(move_to)
@@ -69,8 +84,6 @@ class Piece
 
 	def maybe_promote
 		promote_square = (@color == :red ? 0 : 7)
-		p promote_square
-		p @pos
 		if @pos[0] == promote_square
 			puts "Piece promoted to King"
 			self.is_king = true
@@ -82,7 +95,6 @@ class Piece
 	BLACK_MOVES = [[1, -1], [1, 1], [2, -2], [2, 2]]
 	KING_MOVES = RED_MOVES + BLACK_MOVES
 
-	# private
 	def move_diffs
 		
 		move_diffs = all_move_diffs
@@ -112,27 +124,74 @@ class Piece
 		end
 	end
 
+	def perform_moves!(move_sequence)
+		#move_sequence is like: [pos2, pos3, pos4, pos5]
+		if move_sequence.nil? || move_sequence.empty?
+			raise InvalidMoveError.new('The move sequence is empty')
+		end
+
+		(0...move_sequence.length).each do |i|
+			is_successful = false
+
+			move_type = get_move_type(@pos, move_sequence[i])
+			if move_type == :slide
+				is_successful = perform_slide(move_sequence[i])
+			elsif move_type == :jump
+				is_successful = perform_jump(move_sequence[i])
+			end
+
+			if is_successful == false
+				raise InvalidMoveError.new("The move sequence was incorrect")
+			end
+
+			#prevent users from sliding after jumping
+			if i < move_sequence.length - 1
+				# @board.display
+				next_move = get_move_type(@pos, move_sequence[i + 1])
+				raise InvalidMoveError.new("Only first move can be a slide") if next_move == :slide
+			end
+		end
+	end
+
 end
 
-b = Board.new()
-piece = Piece.new(:black, [1, 1], b)
-p2 = Piece.new(:red, [2, 2], b)
-p3 = Piece.new(:black, [1, 3], b)
-# p piece
-# p piece.move_diffs
-puts "\n\n"
-p piece.perform_slide([2, 0])
-# p p2.perform_jump([0, 4])
-b.display
-puts "is king? #{p2.is_king}"
-# p piece.is_king
-# p piece.perform_jump([3, 3])
-# p piece.perform_slide([2, 0])
-# p piece.perform_jump([0,3])
-# puts "\n\n"
-# b.display
-# piece.perform_slide([10,10])
-# p piece.pos
-# p p2.pos
-# p piece
-# p p2
+
+
+if __FILE__ == $PROGRAM_NAME
+	begin
+		puts "\n\n\n\n\n\n"
+		b = Board.new()
+		piece = Piece.new(:black, [1, 1], b)
+		p2 = Piece.new(:red, [2, 2], b)
+		p3 = Piece.new(:red, [4, 2], b)
+		b.display
+		puts "\n\n"
+		piece.perform_moves!([[3, 3], [5, 1]])
+	rescue => e
+		puts e
+	ensure
+		b.display
+	end
+	# p3 = Piece.new(:black, [1, 3], b)
+	# # p piece
+	# # p piece.move_diffs
+	# puts "\n\n"
+	# p piece.perform_slide([2, 0])
+	# # p p2.perform_jump([0, 4])
+	# b.display
+	# puts "is king? #{p2.is_king}"
+	# p piece.is_king
+	# p piece.perform_jump([3, 3])
+																			# p piece.perform_slide([2, 0])
+	# p piece.perform_jump([0,3])
+	# puts "\n\n"
+	# b.display
+	# piece.perform_slide([10,10])
+	# p piece.pos
+	# p p2.pos
+	# p piece
+	# p p2
+	# move_pair = [[0,-1],[1,-2]]
+	# p piece.get_move_type(move_pair)
+end
+

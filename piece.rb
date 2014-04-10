@@ -12,13 +12,39 @@ class Piece
 		@pos = pos
 		@board = board
 		@is_king = is_king
-		@disp_char = 'P'
+		@disp_char = color.to_s.chars.first
 
 		board.add_piece(self, pos)
 	end
 
 	def perform_jump(move_to)
-		# valid_moves 
+		jump_diffs = move_diffs.select do |diff|
+			diff.all? { |coord| coord.abs == 2 }
+		end
+
+		jump_poses = jump_diffs.map do |diff|
+			[@pos[0] + diff[0], @pos[1] + diff[1]]
+		end
+
+		return false unless jump_poses.include?(move_to)
+		# p "jump_pos valid"
+
+		jumped_pos_x = (move_to[0] - @pos[0]) / 2 + @pos[0]
+		jumped_pos_y = (move_to[1] - @pos[1]) / 2 + @pos[1]
+		jumped_pos = [jumped_pos_x, jumped_pos_y]
+
+		return false if @board.empty?(jumped_pos)	#no piece to jump
+		# p "piece to jump"
+
+		return false if @board[jumped_pos].color == @color
+		# p "opponent exists in spot"
+
+		# remove opponent piece
+		@board.remove_piece(@board[jumped_pos], jumped_pos)
+		@board.move_piece(self, move_to)
+
+
+		true	
 	end
 
 	def perform_slide(move_to)
@@ -30,8 +56,12 @@ class Piece
 			[@pos[0] + diff[0], @pos[1] + diff[1]]
 		end
 
-		return true if slide_poses.include?(move_to)
-		false		
+		if slide_poses.include?(move_to)
+			@board.move_piece(self, move_to)
+			true
+		else
+			false
+		end
 	end
 
 	RED_MOVES = [[-1, -1], [-1, 1], [-2, -2], [-2, 2]]
@@ -69,11 +99,16 @@ end
 
 b = Board.new()
 piece = Piece.new(:black, [1, 1], b)
-p2 = Piece.new(:black, [2, 2], b)
+p2 = Piece.new(:red, [2, 2], b)
 # p piece
 # p piece.move_diffs
 puts "\n\n"
 # p p2.perform_slide([3, 3])
+b.display
+# p piece.perform_jump([3, 3])
+# p piece.perform_slide([2, 0])
+# p piece.perform_jump([0,3])
+puts "\n\n"
 b.display
 # piece.perform_slide([10,10])
 # p piece.pos

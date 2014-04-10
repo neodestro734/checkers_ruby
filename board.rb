@@ -46,6 +46,19 @@ class Board
   	self[pos] = piece
   end
 
+  def remove_piece(piece, pos)
+  	raise "no piece to remove" if empty?(pos)
+
+  	self[pos] = nil
+  end
+
+  def move_piece(piece, pos)
+  	raise "no piece to move" if empty?(piece.pos)
+  	raise "position not empty" unless empty?(pos)
+
+  	self[piece.pos] = nil
+  	self[pos] = piece
+  end
 end
 
 # b = Board.new

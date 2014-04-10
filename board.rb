@@ -8,9 +8,39 @@ class Board
 	def initialize(add_pieces = false)
 		@rows = Array.new(8) { Array.new(8, nil) }
 
-		# if add_pieces
+		if add_pieces
+			even_row_spots = [1, 3, 5, 7]
+			odd_row_spots = [0, 2, 4, 6]
 
-		# end
+			# add black pieces
+			(0..2).each do |row|
+				if row.even?
+					even_row_spots.each do |col|
+						Piece.new(:black, [row, col], self, false)
+					end
+				else
+					odd_row_spots.each do |col|
+						Piece.new(:black, [row, col], self, false)
+					end
+				end
+			end
+
+			# add red pieces
+			(5..7).each do |row|
+				if row.even?
+					even_row_spots.each do |col|
+						Piece.new(:red, [row, col], self, false)
+					end
+				else
+					odd_row_spots.each do |col|
+						Piece.new(:red, [row, col], self, false)
+					end
+				end
+			end
+
+			# Piece.new(:black, [0, 0], b)
+
+		end
 	end
 
 	def [](pos)
@@ -81,10 +111,11 @@ class Board
 end
 
 if __FILE__ == $PROGRAM_NAME
-	b = Board.new
-	piece = Piece.new(:black, [1, 1], b)
-	p2 = Piece.new(:red, [2, 2], b)
-	p3 = Piece.new(:red, [4, 2], b)
+	b = Board.new(true)
+	b.display
+	# piece = Piece.new(:black, [1, 1], b)
+	# p2 = Piece.new(:red, [2, 2], b)
+	# p3 = Piece.new(:red, [4, 2], b)
 	# puts "Board B:"
 	# b.display
 	# puts "\n\n"

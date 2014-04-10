@@ -157,6 +157,14 @@ class Piece
 		true
 	end
 
+	def perform_moves(move_sequence)
+		if valid_move_seq?(move_sequence)
+			perform_moves!(move_sequence)
+		else
+			raise InvalidMoveError.new("Returned from perform_moves")
+		end
+	end
+
 	def valid_move_seq?(move_sequence)
 		start_pos = @pos
 		new_board = @board.dup
@@ -186,9 +194,9 @@ if __FILE__ == $PROGRAM_NAME
 		b.display
 		puts "\n\n"
 
-		move_sequence = [[2,0]]
-		p piece.valid_move_seq?(move_sequence)
-		piece.perform_moves!(move_sequence)
+		move_sequence = [[3, 3], [5, 2]]
+		# p piece.valid_move_seq?(move_sequence)
+		piece.perform_moves(move_sequence)
 	rescue => e
 		puts e
 	ensure

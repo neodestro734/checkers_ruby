@@ -77,7 +77,7 @@ class Piece
 
 		if slide_poses.include?(move_to)
 			@board.move_piece(self, move_to)
-			p @pos
+			# p @pos
 			maybe_promote
 			true
 		else
@@ -154,6 +154,22 @@ class Piece
 				raise InvalidMoveError.new("Only first move can be a slide") if next_move == :slide
 			end
 		end
+		true
+	end
+
+	def valid_move_seq?(move_sequence)
+		start_pos = @pos
+		new_board = @board.dup
+		new_piece = new_board[start_pos]
+
+		begin
+			new_piece.perform_moves!(move_sequence)
+		rescue => e
+			puts e
+			false
+		else
+			true
+		end
 	end
 
 end
@@ -169,7 +185,10 @@ if __FILE__ == $PROGRAM_NAME
 		p3 = Piece.new(:red, [4, 2], b)
 		b.display
 		puts "\n\n"
-		piece.perform_moves!([[3, 3], [5, 1]])
+
+		move_sequence = [[2,0]]
+		p piece.valid_move_seq?(move_sequence)
+		piece.perform_moves!(move_sequence)
 	rescue => e
 		puts e
 	ensure

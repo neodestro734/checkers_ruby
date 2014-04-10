@@ -67,10 +67,11 @@ class Board
   def display
   	(0..7).each do |r|
   		(0..7).each do |c|
+  			color = (r + c).even? ? :light_red : :light_black
   			if self[[r, c]].nil?
-  				print ". "
+  				print "  ".colorize(:background => color)
   			else
-  				print "#{self[[r, c]].disp_char} "
+  				print "#{self[[r, c]].disp_char} ".colorize(:background => color)
   			end
   		end
   		print "\n"

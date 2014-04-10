@@ -1,5 +1,6 @@
 require './board.rb'
 require 'debugger'
+require 'colorize'
 
 # red stats at 7, black starts at 0
 
@@ -15,9 +16,9 @@ class Piece
 		@pos = pos
 		@board = board
 		@is_king = is_king
-		@disp_char = color.to_s.chars.first
+		@disp_char = "\u25cf".colorize(color)			#color.to_s.chars.first
 		if is_king
-			@disp_char + 'k'
+			@disp_char = "\u25d9".colorize(color)
 		end
 
 		board.add_piece(self, pos)
@@ -90,7 +91,7 @@ class Piece
 		if @pos[0] == promote_square
 			puts "Piece promoted to King"
 			self.is_king = true
-			self.disp_char.upcase!
+			@disp_char = "\u25D9".colorize(color)
 		end
 	end
 

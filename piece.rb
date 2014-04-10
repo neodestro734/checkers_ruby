@@ -84,17 +84,8 @@ class Piece
 
 	# private
 	def move_diffs
-		move_diffs = []
-
-		if self.is_king == false
-			if self.color == :red
-				move_diffs = RED_MOVES
-			elsif self.color == :black
-				move_diffs = BLACK_MOVES
-			end
-		else # self.is_king == true
-			move_diffs = KING_MOVES
-		end
+		
+		move_diffs = all_move_diffs
 
 		valid_diffs = []
 
@@ -109,6 +100,18 @@ class Piece
 		valid_diffs
 	end
 
+	def all_move_diffs
+		if self.is_king == false
+			if self.color == :red
+				move_diffs = RED_MOVES
+			elsif self.color == :black
+				move_diffs = BLACK_MOVES
+			end
+		else # self.is_king == true
+			move_diffs = KING_MOVES
+		end
+	end
+
 end
 
 b = Board.new()
@@ -118,8 +121,8 @@ p3 = Piece.new(:black, [1, 3], b)
 # p piece
 # p piece.move_diffs
 puts "\n\n"
-# p p2.perform_slide([3, 3])
-p p2.perform_jump([0, 4])
+p piece.perform_slide([2, 0])
+# p p2.perform_jump([0, 4])
 b.display
 puts "is king? #{p2.is_king}"
 # p piece.is_king

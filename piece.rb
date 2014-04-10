@@ -1,6 +1,8 @@
 require './board.rb'
 require 'debugger'
 
+# red stats at 7, black starts at 0
+
 class Piece
 
 	attr_accessor :color, :is_king, :pos, :board, :disp_char
@@ -16,11 +18,20 @@ class Piece
 	end
 
 	def perform_jump(move_to)
-
+		# valid_moves 
 	end
 
 	def perform_slide(move_to)
-		# valid_moves = move_diffs.select { |diff| self.pos}
+		slide_diffs = move_diffs.select do |diff|
+			diff.all? { |coord| coord.abs == 1 }
+		end
+
+		slide_poses = slide_diffs.map do |diff|
+			[@pos[0] + diff[0], @pos[1] + diff[1]]
+		end
+
+		return true if slide_poses.include?(move_to)
+		false		
 	end
 
 	RED_MOVES = [[-1, -1], [-1, 1], [-2, -2], [-2, 2]]
@@ -58,10 +69,13 @@ end
 
 b = Board.new()
 piece = Piece.new(:black, [1, 1], b)
-p2 = Piece.new(:red, [2, 2], b)
+p2 = Piece.new(:black, [2, 2], b)
 # p piece
-piece.move_diffs
+# p piece.move_diffs
+puts "\n\n"
+# p p2.perform_slide([3, 3])
 b.display
+# piece.perform_slide([10,10])
 # p piece.pos
 # p p2.pos
 # p piece

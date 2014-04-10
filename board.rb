@@ -1,12 +1,15 @@
+require './piece.rb'
+
+
 class Board
 
 	attr_accessor :rows
 
-	def initialize(add_pieces = true)
+	def initialize(add_pieces = false)
 		@rows = Array.new(8) { Array.new(8, nil) }
 
 		# if add_pieces
-			
+
 		# end
 	end
 
@@ -44,6 +47,17 @@ class Board
   	end
   end
 
+  def dup
+  	pieces = self.rows.flatten.compact
+  	new_board = Board.new(false)
+  	
+  	pieces.each do |piece|
+  		piece.class.new(piece.color, piece.pos.dup, new_board, piece.is_king)
+  	end
+
+  	new_board
+  end
+
   def add_piece(piece, pos)
   	raise "position not empty" unless empty?(pos)
 
@@ -66,16 +80,37 @@ class Board
   end
 end
 
-# b = Board.new
-# p b.on_board?([1,1])
-# p b.on_board?([7,7])
-# p b.on_board?([-1,1])
-# p b.on_board?([1,10])
-# p b.on_board?([10,1])
-# b.display
-# puts "\n\n"
-# b[[0, 0]] = 'a'
-# b[[5, 1]] = 'f'
-# b.display
-# p b.empty?([1,2])
-# p b.empty?([5,1])
+if __FILE__ == $PROGRAM_NAME
+	b = Board.new
+	piece = Piece.new(:black, [1, 1], b)
+	p2 = Piece.new(:red, [2, 2], b)
+	p3 = Piece.new(:red, [4, 2], b)
+	# puts "Board B:"
+	# b.display
+	# puts "\n\n"
+	# puts "Board C:"
+	# c = b.dup
+	# c.display
+	# p b[[1,1]].pos.object_id
+	# p c[[1,1]].pos.object_id
+
+	# b.move_piece(p3, [6,6])
+	# b.display
+	# puts "\n\n"
+	# c.display
+
+
+	# p b.on_board?([1,1])
+	# p b.on_board?([7,7])
+	# p b.on_board?([-1,1])
+	# p b.on_board?([1,10])
+	# p b.on_board?([10,1])
+	# b.display
+	# puts "\n\n"
+	# b[[0, 0]] = 'a'
+	# b[[5, 1]] = 'f'
+	# b.display
+	# p b.empty?([1,2])
+	# p b.empty?([5,1])
+end
+

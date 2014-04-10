@@ -16,6 +16,9 @@ class Piece
 		@board = board
 		@is_king = is_king
 		@disp_char = color.to_s.chars.first
+		if is_king
+			@disp_char + 'k'
+		end
 
 		board.add_piece(self, pos)
 	end

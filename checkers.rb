@@ -13,12 +13,14 @@ class Checkers
 	end
 
 	def run
-		puts "\n\nWelcome to checkers!!\n\n"
+		puts "\n\nWelcome to checkers!!"
 		player = @player1 #red
 		loop do
+			print "\n"
 			@board.display
 
 			piece_to_move = player.get_piece_to_move(@board)
+
 			if piece_to_move.color != player.color
 				puts "\nYou must move your own piece!\n".colorize(:red)
 				next
@@ -36,9 +38,6 @@ class Checkers
 			user_input
 		end
 
-		def is_valid_move_sequence?(move_sequence)
-
-		end
 	end
 
 end
@@ -55,25 +54,40 @@ class HumanPlayer
 		begin
 			puts "\n\nPlease enter a piece to move by its board coordinates."
 			puts "(0,0) is in the upper left hand corner:\n\n"
-			piece_arr = gets.chomp.split(',')
-			piece_spot = piece_arr.map(&:to_i)
+			pos_arr = gets.chomp.chars
+			piece_spot = parse_char_spot(pos_arr)
 		rescue => e
 			puts e
 			retry
 		end
+
 		board[piece_spot]
+	end
+
+	def parse_char_spot(pos_arr)
+		char_map = { 	'a' => 0,
+                  'b' => 1,
+                  'c' => 2,
+                  'd' => 3,
+                  'e' => 4,
+                  'f' => 5,
+                  'g' => 6,
+                  'h' => 7 }
+     i = 8 - pos_arr[1].to_i
+     j = char_map[pos_arr[0].downcase]
+
+     [i, j]
 	end
 
 	def get_move_sequence
 		move_seq = []
 		begin
-			puts 'Please enter a move sequence in this format: 2,2 4,4'
+			puts "\nPlease enter a move sequence in this format: \"c5 e7\"\n\n"
 			move_seq_arr = gets.chomp.split(' ')
-			p move_seq_arr
 
 			move_seq_arr.each do |string_pos|
-				els = string_pos.split(',')
-				move_seq << [els[0].to_i, els[1].to_i]
+				piece_spot = parse_char_spot(string_pos)
+				move_seq << piece_spot
 			end
 		rescue => e
 			puts e

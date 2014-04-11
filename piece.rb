@@ -1,8 +1,6 @@
-require './board.rb'
+# require './board.rb'
 require 'debugger'
 require 'colorize'
-
-# red stats at 7, black starts at 0
 
 class InvalidMoveError < ArgumentError
 end
@@ -16,24 +14,13 @@ class Piece
 		@pos = pos
 		@board = board
 		@is_king = is_king
-		@disp_char = "\u25cf".colorize(color)			#color.to_s.chars.first
 		if is_king
 			@disp_char = "\u25d9".colorize(color)
+		else
+			@disp_char = "\u25cf".colorize(color)
 		end
 
 		board.add_piece(self, pos)
-	end
-
-	def subtract_moves(pos1, pos2)
-		[pos1[0] - pos2[0], pos1[1] - pos2[1]]
-	end
-
-	def get_move_type(pos1, pos2)
-		if subtract_moves(pos1, pos2).all? { |dif| dif.abs == 1 }
-				:slide
-			else
-				:jump
-			end
 	end
 
 	def perform_jump(move_to)
@@ -95,39 +82,6 @@ class Piece
 		end
 	end
 
-	RED_MOVES = [[-1, -1], [-1, 1], [-2, -2], [-2, 2]]
-	BLACK_MOVES = [[1, -1], [1, 1], [2, -2], [2, 2]]
-	KING_MOVES = RED_MOVES + BLACK_MOVES
-
-	def move_diffs
-		
-		move_diffs = all_move_diffs
-
-		valid_diffs = []
-
-		move_diffs.each do |diff|
-			new_pos = [@pos[0] + diff[0], @pos[1] + diff[1]]
-
-			if @board.on_board?(new_pos) && @board.empty?(new_pos)
-				valid_diffs << diff
-			end
-		end
-
-		valid_diffs
-	end
-
-	def all_move_diffs
-		if self.is_king == false
-			if self.color == :red
-				move_diffs = RED_MOVES
-			elsif self.color == :black
-				move_diffs = BLACK_MOVES
-			end
-		else # self.is_king == true
-			move_diffs = KING_MOVES
-		end
-	end
-
 	def perform_moves!(move_sequence)
 		#move_sequence is like: [pos2, pos3, pos4, pos5]
 		if move_sequence.nil? || move_sequence.empty?
@@ -180,6 +134,55 @@ class Piece
 			false
 		else
 			true
+		end
+	end
+
+
+
+	#------------------------------ PRIVATE -------------------------------------
+	private
+
+	RED_MOVES = [[-1, -1], [-1, 1], [-2, -2], [-2, 2]]
+	BLACK_MOVES = [[1, -1], [1, 1], [2, -2], [2, 2]]
+	KING_MOVES = RED_MOVES + BLACK_MOVES
+
+	def move_diffs
+		move_diffs = all_move_diffs
+
+		valid_diffs = []
+
+		move_diffs.each do |diff|
+			new_pos = [@pos[0] + diff[0], @pos[1] + diff[1]]
+
+			if @board.on_board?(new_pos) && @board.empty?(new_pos)
+				valid_diffs << diff
+			end
+		end
+
+		valid_diffs
+	end
+
+	def all_move_diffs
+		if self.is_king == false
+			if self.color == :red
+				move_diffs = RED_MOVES
+			elsif self.color == :black
+				move_diffs = BLACK_MOVES
+			end
+		else # self.is_king == true
+			move_diffs = KING_MOVES
+		end
+	end
+
+	def subtract_moves(pos1, pos2)
+		[pos1[0] - pos2[0], pos1[1] - pos2[1]]
+	end
+
+	def get_move_type(pos1, pos2)
+		if subtract_moves(pos1, pos2).all? { |dif| dif.abs == 1 }
+			:slide
+		else
+			:jump
 		end
 	end
 

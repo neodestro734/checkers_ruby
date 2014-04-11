@@ -3,41 +3,17 @@ require './piece.rb'
 
 class Board
 
-	attr_accessor :rows
+	attr_reader :rows
+
+	EVEN_ROW_SPOTS = [1, 3, 5, 7]
+	ODD_ROW_SPOTS = [0, 2, 4, 6]
 
 	def initialize(add_pieces = false)
 		@rows = Array.new(8) { Array.new(8, nil) }
 
 		if add_pieces
-			even_row_spots = [1, 3, 5, 7]
-			odd_row_spots = [0, 2, 4, 6]
-
-			# add black pieces
-			(0..2).each do |row|
-				if row.even?
-					even_row_spots.each do |col|
-						Piece.new(:black, [row, col], self, false)
-					end
-				else
-					odd_row_spots.each do |col|
-						Piece.new(:black, [row, col], self, false)
-					end
-				end
-			end
-
-			# add red pieces
-			(5..7).each do |row|
-				if row.even?
-					even_row_spots.each do |col|
-						Piece.new(:red, [row, col], self, false)
-					end
-				else
-					odd_row_spots.each do |col|
-						Piece.new(:red, [row, col], self, false)
-					end
-				end
-			end
-
+			add_black_pieces
+			add_red_pieces
 		end
 	end
 
@@ -47,7 +23,7 @@ class Board
 	end
 
 	def []=(pos, piece)
-		# raise "invalid pos" unless valid_pos?(pos)
+		raise "invalid pos" unless on_board?(pos)
 
 		i, j = pos
     @rows[i][j] = piece
@@ -109,4 +85,38 @@ class Board
   	self[pos] = piece
   	piece.pos = pos
   end
+
+  
+
+	#------------------------------ PRIVATE -------------------------------------
+  private
+
+	def add_black_pieces
+		(0..2).each do |row|
+			if row.even?
+				EVEN_ROW_SPOTS.each do |col|
+					Piece.new(:black, [row, col], self, false)
+				end
+			else
+				ODD_ROW_SPOTS.each do |col|
+					Piece.new(:black, [row, col], self, false)
+				end
+			end
+		end
+	end
+
+	def add_red_pieces
+		(5..7).each do |row|
+			if row.even?
+				EVEN_ROW_SPOTS.each do |col|
+					Piece.new(:red, [row, col], self, false)
+				end
+			else
+				ODD_ROW_SPOTS.each do |col|
+					Piece.new(:red, [row, col], self, false)
+				end
+			end
+		end
+	end
+
 end

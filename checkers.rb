@@ -10,17 +10,13 @@ class Checkers
 		@board = Board.new(true)
 		@player1 = HumanPlayer.new(:red)
 		@player2 = HumanPlayer.new(:black)
-
 	end
 
 	def run
-		# system "clear"
-		# puts "\nWelcome to checkers!!"
 		player = @player1 #red
 		loop do
 			system "clear"
 			print "\nWelcome to checkers!!\n\n"
-			# print "\nBrought to you by pingram\n\n"
 			@board.display
 
 			piece_to_move = player.get_piece_to_move(@board)
@@ -37,10 +33,6 @@ class Checkers
 			piece_to_move.perform_moves(user_move_seq)
 
 			player = (player.color == :red ? @player2 : @player1)
-		end
-
-		def parse_input(user_input)
-			user_input
 		end
 	end
 

@@ -13,9 +13,11 @@ class HumanPlayer
 			print "\n\nPlease enter a piece to move"
 			print "\nby its board coordinates.\n"
 			pos_arr = gets.chomp.chars
+
 			if pos_arr.length > 2
 				raise ArgumentError.new("\nToo many characters! Should\nbe in format: \"A3\"")
 			end
+
 			piece_spot = parse_char_spot(pos_arr)
 			if board[piece_spot].nil?
 				raise ArgumentError.new("\nThat spot is empty!")

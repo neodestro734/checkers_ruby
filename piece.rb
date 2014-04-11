@@ -145,14 +145,15 @@ class Piece
 			end
 
 			if is_successful == false
-				raise InvalidMoveError.new("The move sequence was incorrect")
+				raise InvalidMoveError.new("\nThe move sequence was incorrect\n")
 			end
 
 			#prevent users from sliding after jumping
 			if i < move_sequence.length - 1
-				# @board.display
 				next_move = get_move_type(@pos, move_sequence[i + 1])
-				raise InvalidMoveError.new("Only first move can be a slide") if next_move == :slide
+				if next_move == :slide
+					raise InvalidMoveError.new("\nOnly first move can be a slide\n")
+				end
 			end
 		end
 		true
@@ -162,7 +163,7 @@ class Piece
 		if valid_move_seq?(move_sequence)
 			perform_moves!(move_sequence)
 		else
-			raise InvalidMoveError.new("Returned from perform_moves")
+			raise InvalidMoveError.new("\nReturned from perform_moves\n")
 		end
 	end
 
@@ -174,7 +175,8 @@ class Piece
 		begin
 			new_piece.perform_moves!(move_sequence)
 		rescue => e
-			puts e
+			puts e.message.colorize(:red)
+			gets	# this allows us to continue when the user presses enter
 			false
 		else
 			true
@@ -182,47 +184,3 @@ class Piece
 	end
 
 end
-
-
-
-if __FILE__ == $PROGRAM_NAME
-	begin
-		puts "\n\n\n\n\n\n"
-		b = Board.new()
-		piece = Piece.new(:black, [1, 1], b)
-		p2 = Piece.new(:red, [2, 2], b)
-		p3 = Piece.new(:red, [4, 2], b)
-		b.display
-		puts "\n\n"
-
-		move_sequence = [[3, 3], [5, 2]]
-		# p piece.valid_move_seq?(move_sequence)
-		piece.perform_moves(move_sequence)
-	rescue => e
-		puts e
-	ensure
-		b.display
-	end
-	# p3 = Piece.new(:black, [1, 3], b)
-	# # p piece
-	# # p piece.move_diffs
-	# puts "\n\n"
-	# p piece.perform_slide([2, 0])
-	# # p p2.perform_jump([0, 4])
-	# b.display
-	# puts "is king? #{p2.is_king}"
-	# p piece.is_king
-	# p piece.perform_jump([3, 3])
-																			# p piece.perform_slide([2, 0])
-	# p piece.perform_jump([0,3])
-	# puts "\n\n"
-	# b.display
-	# piece.perform_slide([10,10])
-	# p piece.pos
-	# p p2.pos
-	# p piece
-	# p p2
-	# move_pair = [[0,-1],[1,-2]]
-	# p piece.get_move_type(move_pair)
-end
-

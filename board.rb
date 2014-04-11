@@ -38,8 +38,6 @@ class Board
 				end
 			end
 
-			# Piece.new(:black, [0, 0], b)
-
 		end
 	end
 
@@ -112,39 +110,3 @@ class Board
   	piece.pos = pos
   end
 end
-
-if __FILE__ == $PROGRAM_NAME
-	b = Board.new(true)
-	b.display
-	# piece = Piece.new(:black, [1, 1], b)
-	# p2 = Piece.new(:red, [2, 2], b)
-	# p3 = Piece.new(:red, [4, 2], b)
-	# puts "Board B:"
-	# b.display
-	# puts "\n\n"
-	# puts "Board C:"
-	# c = b.dup
-	# c.display
-	# p b[[1,1]].pos.object_id
-	# p c[[1,1]].pos.object_id
-
-	# b.move_piece(p3, [6,6])
-	# b.display
-	# puts "\n\n"
-	# c.display
-
-
-	# p b.on_board?([1,1])
-	# p b.on_board?([7,7])
-	# p b.on_board?([-1,1])
-	# p b.on_board?([1,10])
-	# p b.on_board?([10,1])
-	# b.display
-	# puts "\n\n"
-	# b[[0, 0]] = 'a'
-	# b[[5, 1]] = 'f'
-	# b.display
-	# p b.empty?([1,2])
-	# p b.empty?([5,1])
-end
-

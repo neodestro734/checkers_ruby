@@ -33,7 +33,23 @@ class Checkers
 			piece_to_move.perform_moves(user_move_seq)
 
 			player = (player.color == :red ? @player2 : @player1)
+
+			if red_wins?
+				print "\n\nRED WON!!!\n\n\n"
+				return
+			elsif black_wins?
+				print "\n\nBLACK WON!!!\n\n\n"
+				return
+			end
 		end
+	end
+
+	def red_wins?
+		@board.rows.flatten.compact.none? { |piece| piece.color == :black }
+	end
+
+	def black_wins?
+		@board.rows.flatten.compact.none? { |piece| piece.color == :red }
 	end
 
 end
